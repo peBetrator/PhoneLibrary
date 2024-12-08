@@ -1,0 +1,62 @@
+# Build directories
+bin/
+obj/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio-specific
+.vscode/
+.vs/
+
+# NuGet packages
+*.nupkg
+packages/
+# Uncomment if using the newer .NET Core/SDK-style projects
+# **/project.lock.json
+# **/project.fragment.lock.json
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.vspscc
+
+# Build artifacts
+*.dll
+*.exe
+*.pdb
+*.cache
+*.ilk
+*.lib
+*.obj
+*.iobj
+*.ipdb
+*.tlog
+*.log
+*.d
+*.idb
+*.id
+*.pidb
+*.scc
+
+# IDE-specific
+.idea/
+_ReSharper*/
+*.resharper
+*.sln.iml
+
+# Generated files
+Generated_Code/
+ServiceReferences/
+_TestResults/
+TestResults/
+
+# Others
+*.sqlite
+*.sqlite3
+*.swp
