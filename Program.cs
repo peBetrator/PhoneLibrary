@@ -47,7 +47,7 @@ namespace Phone
             btnDelete.Click += (s, e) => DeletePhone(lblDisplay);
         }
 
-        private TextBox CreateTextBoxWithLabel(Form form, string labelText, ref int y, ToolTip toolTip, string toolTipText)
+        private TextBox CreateTextBoxWithLabel(Panel form, string labelText, ref int y, ToolTip toolTip, string toolTipText)
         {
             var label = new Label { Text = labelText, Location = new System.Drawing.Point(20, y), AutoSize = true };
             var textBox = new TextBox { Location = new System.Drawing.Point(150, y), Width = 200 };
@@ -58,7 +58,7 @@ namespace Phone
             return textBox;
         }
 
-        private NumericUpDown CreateNumericUpDownWithLabel(Form form, string labelText, ref int y, ToolTip toolTip, decimal min, decimal max, int decimalPlaces, string toolTipText)
+        private NumericUpDown CreateNumericUpDownWithLabel(Panel form, string labelText, ref int y, ToolTip toolTip, decimal min, decimal max, int decimalPlaces, string toolTipText)
         {
             var label = new Label { Text = labelText, Location = new System.Drawing.Point(20, y), AutoSize = true };
             var numericUpDown = new NumericUpDown
@@ -76,7 +76,7 @@ namespace Phone
             return numericUpDown;
         }
 
-        private System.Windows.Forms.CheckBox CreateCheckBoxWithLabel(Form form, string labelText, ref int y, ToolTip toolTip, string toolTipText)
+        private System.Windows.Forms.CheckBox CreateCheckBoxWithLabel(Panel form, string labelText, ref int y, ToolTip toolTip, string toolTipText)
         {
             var label = new Label { Text = labelText, Location = new System.Drawing.Point(20, y), AutoSize = true };
             var checkBox = new System.Windows.Forms.CheckBox { Location = new System.Drawing.Point(150, y) };
@@ -87,7 +87,7 @@ namespace Phone
             return checkBox;
         }
 
-        private ComboBox CreateComboBoxWithLabel(Form form, string labelText, ref int y, ToolTip toolTip, Type enumType)
+        private ComboBox CreateComboBoxWithLabel(Panel form, string labelText, ref int y, ToolTip toolTip, Type enumType)
         {
             var label = new Label { Text = labelText, Location = new System.Drawing.Point(20, y), AutoSize = true };
             var comboBox = new ComboBox
@@ -104,7 +104,7 @@ namespace Phone
             return comboBox;
         }
 
-        private Func<NetworkRange> CreateRadioButtonGroupWithLabel(Form form, string labelText, ref int y, string[] options, string toolTipText)
+        private Func<NetworkRange> CreateRadioButtonGroupWithLabel(Panel form, string labelText, ref int y, string[] options, string toolTipText)
         {
             var label = new Label { Text = labelText, Location = new System.Drawing.Point(20, y), AutoSize = true };
             var groupBox = new System.Windows.Forms.GroupBox
@@ -165,37 +165,46 @@ namespace Phone
             }
         }
 
-
         private void CreateNewPhone(Label displayLabel)
         {
             var form = new Form
             {
                 Text = "Create New Mobile Phone",
-                Size = new System.Drawing.Size(400, 600),
+                Size = new System.Drawing.Size(420, 600), // Include space for VScrollBar
                 StartPosition = FormStartPosition.CenterParent
             };
 
             var toolTip = new ToolTip();
             bool isSaved = false;
-            int y = 20;
 
-            // Поля ввода
-            var brandTextBox = CreateTextBoxWithLabel(form, "Brand:", ref y, toolTip, "Enter the brand of the phone.");
-            var modelTextBox = CreateTextBoxWithLabel(form, "Model:", ref y, toolTip, "Enter the model of the phone.");
-            var priceNumericUpDown = CreateNumericUpDownWithLabel(form, "Price:", ref y, toolTip, 0, 10000, 2, "Enter the price of the phone.");
-            var dualSimCheckBox = CreateCheckBoxWithLabel(form, "Dual SIM:", ref y, toolTip, "Check if the phone supports dual SIM cards.");
-            var osComboBox = CreateComboBoxWithLabel(form, "Operating System:", ref y, toolTip, typeof(OperatingSystemType));
-            var displayComboBox = CreateComboBoxWithLabel(form, "Display Type:", ref y, toolTip, typeof(DisplayType));
-            var batteryNumericUpDown = CreateNumericUpDownWithLabel(form, "Battery (mAh):", ref y, toolTip, 1000, 10000, 0, "Enter the battery capacity in mAh.");
-            var releaseYearNumericUpDown = CreateNumericUpDownWithLabel(form, "Release Year:", ref y, toolTip, 2000, DateTime.Now.Year, 0, "Enter the release year of the phone.");
-            var is5GCheckBox = CreateCheckBoxWithLabel(form, "5G Capable:", ref y, toolTip, "Check if the phone supports 5G.");
-            var memoryNumericUpDown = CreateNumericUpDownWithLabel(form, "Memory (GB):", ref y, toolTip, 1, 1024, 0, "Enter the memory size in GB.");
+            // Panel to hold content
+            var containerPanel = new Panel
+            {
+                Location = new System.Drawing.Point(0, 0),
+                Size = new System.Drawing.Size(400, 600), // Width excludes VScrollBar
+                AutoScroll = true
+            };
 
-            // Радио-кнопки для диапазона сети
-            var selectedRange = CreateRadioButtonGroupWithLabel(form, "Network Range:", ref y, new[] { "2G", "3G", "4G", "5G" }, "Select the network range of the phone.");
+            form.Controls.Add(containerPanel);
 
+            int y = 20; // Starting Y-coordinate for controls
 
-            // Кнопка сохранения
+            // Add controls for input
+            var brandTextBox = CreateTextBoxWithLabel(containerPanel, "Brand:", ref y, toolTip, "Enter the brand of the phone.");
+            var modelTextBox = CreateTextBoxWithLabel(containerPanel, "Model:", ref y, toolTip, "Enter the model of the phone.");
+            var priceNumericUpDown = CreateNumericUpDownWithLabel(containerPanel, "Price:", ref y, toolTip, 0, 10000, 2, "Enter the price of the phone.");
+            var dualSimCheckBox = CreateCheckBoxWithLabel(containerPanel, "Dual SIM:", ref y, toolTip, "Check if the phone supports dual SIM cards.");
+            var osComboBox = CreateComboBoxWithLabel(containerPanel, "Operating System:", ref y, toolTip, typeof(OperatingSystemType));
+            var displayComboBox = CreateComboBoxWithLabel(containerPanel, "Display Type:", ref y, toolTip, typeof(DisplayType));
+            var batteryNumericUpDown = CreateNumericUpDownWithLabel(containerPanel, "Battery (mAh):", ref y, toolTip, 1000, 10000, 0, "Enter the battery capacity in mAh.");
+            var releaseYearNumericUpDown = CreateNumericUpDownWithLabel(containerPanel, "Release Year:", ref y, toolTip, 2000, DateTime.Now.Year, 0, "Enter the release year of the phone.");
+            var is5GCheckBox = CreateCheckBoxWithLabel(containerPanel, "5G Capable:", ref y, toolTip, "Check if the phone supports 5G.");
+            var memoryNumericUpDown = CreateNumericUpDownWithLabel(containerPanel, "Memory (GB):", ref y, toolTip, 1, 1024, 0, "Enter the memory size in GB.");
+
+            // Add radio buttons for network range
+            var selectedRange = CreateRadioButtonGroupWithLabel(containerPanel, "Network Range:", ref y, new[] { "2G", "3G", "4G", "5G" }, "Select the network range of the phone.");
+
+            // Add save button
             var saveButton = new Button
             {
                 Text = "Save",
@@ -224,9 +233,9 @@ namespace Phone
                 displayLabel.Text = "Phone created:\n" + PhoneToString(_currentPhone);
             };
 
-            form.Controls.Add(saveButton);
+            containerPanel.Controls.Add(saveButton);
 
-            // Обработка закрытия формы
+            // Handle form closing
             form.FormClosing += (s, e) => HandleFormClosing(e, isSaved);
 
             form.ShowDialog();
@@ -280,47 +289,58 @@ namespace Phone
             var form = new Form
             {
                 Text = "Edit Mobile Phone",
-                Size = new System.Drawing.Size(400, 600),
+                Size = new System.Drawing.Size(420, 600), // Дополнительное место для VScrollBar
                 StartPosition = FormStartPosition.CenterParent
             };
+
+            // Panel to hold content
+            var containerPanel = new Panel
+            {
+                Location = new System.Drawing.Point(0, 0),
+                Size = new System.Drawing.Size(400, 600), // Width excludes VScrollBar
+                AutoScroll = true
+            };
+
+            form.Controls.Add(containerPanel);
+
 
             var toolTip = new ToolTip();
             bool isSaved = false;
             int y = 20;
 
             // Поля редактирования
-            var brandTextBox = CreateTextBoxWithLabel(form, "Brand:", ref y, toolTip, "Enter the brand of the phone.");
+            var brandTextBox = CreateTextBoxWithLabel(containerPanel, "Brand:", ref y, toolTip, "Enter the brand of the phone.");
             brandTextBox.Text = _currentPhone.Brand;
 
-            var modelTextBox = CreateTextBoxWithLabel(form, "Model:", ref y, toolTip, "Enter the model of the phone.");
+            var modelTextBox = CreateTextBoxWithLabel(containerPanel, "Model:", ref y, toolTip, "Enter the model of the phone.");
             modelTextBox.Text = _currentPhone.Model;
 
-            var priceNumericUpDown = CreateNumericUpDownWithLabel(form, "Price:", ref y, toolTip, 0, 10000, 2, "Enter the price of the phone.");
+            var priceNumericUpDown = CreateNumericUpDownWithLabel(containerPanel, "Price:", ref y, toolTip, 0, 10000, 2, "Enter the price of the phone.");
             priceNumericUpDown.Value = _currentPhone.Price;
 
-            var dualSimCheckBox = CreateCheckBoxWithLabel(form, "Dual SIM:", ref y, toolTip, "Check if the phone supports dual SIM cards.");
+            var dualSimCheckBox = CreateCheckBoxWithLabel(containerPanel, "Dual SIM:", ref y, toolTip, "Check if the phone supports dual SIM cards.");
             dualSimCheckBox.Checked = _currentPhone.IsDualSim;
 
-            var osComboBox = CreateComboBoxWithLabel(form, "Operating System:", ref y, toolTip, typeof(OperatingSystemType));
+            var osComboBox = CreateComboBoxWithLabel(containerPanel, "Operating System:", ref y, toolTip, typeof(OperatingSystemType));
             osComboBox.SelectedItem = _currentPhone.OperatingSystem;
 
-            var displayComboBox = CreateComboBoxWithLabel(form, "Display Type:", ref y, toolTip, typeof(DisplayType));
+            var displayComboBox = CreateComboBoxWithLabel(containerPanel, "Display Type:", ref y, toolTip, typeof(DisplayType));
             displayComboBox.SelectedItem = _currentPhone.Display;
 
-            var batteryNumericUpDown = CreateNumericUpDownWithLabel(form, "Battery (mAh):", ref y, toolTip, 1000, 10000, 0, "Enter the battery capacity in mAh.");
+            var batteryNumericUpDown = CreateNumericUpDownWithLabel(containerPanel, "Battery (mAh):", ref y, toolTip, 1000, 10000, 0, "Enter the battery capacity in mAh.");
             batteryNumericUpDown.Value = _currentPhone.BatteryLevel;
 
-            var releaseYearNumericUpDown = CreateNumericUpDownWithLabel(form, "Release Year:", ref y, toolTip, 2000, DateTime.Now.Year, 0, "Enter the release year of the phone.");
+            var releaseYearNumericUpDown = CreateNumericUpDownWithLabel(containerPanel, "Release Year:", ref y, toolTip, 2000, DateTime.Now.Year, 0, "Enter the release year of the phone.");
             releaseYearNumericUpDown.Value = _currentPhone.ReleaseYear.Year;
 
-            var is5GCheckBox = CreateCheckBoxWithLabel(form, "5G Capable:", ref y, toolTip, "Check if the phone supports 5G.");
+            var is5GCheckBox = CreateCheckBoxWithLabel(containerPanel, "5G Capable:", ref y, toolTip, "Check if the phone supports 5G.");
             is5GCheckBox.Checked = _currentPhone.Is5GCapable;
 
-            var memoryNumericUpDown = CreateNumericUpDownWithLabel(form, "Memory (GB):", ref y, toolTip, 1, 1024, 0, "Enter the memory size in GB.");
+            var memoryNumericUpDown = CreateNumericUpDownWithLabel(containerPanel, "Memory (GB):", ref y, toolTip, 1, 1024, 0, "Enter the memory size in GB.");
             memoryNumericUpDown.Value = _currentPhone.Memory;
 
             // Радио-кнопки для диапазона сети
-            var selectedRange = CreateRadioButtonGroupWithLabel(form, "Network Range:", ref y, new[] { "2G", "3G", "4G", "5G" }, "Select the network range of the phone.");
+            var selectedRange = CreateRadioButtonGroupWithLabel(containerPanel, "Network Range:", ref y, new[] { "2G", "3G", "4G", "5G" }, "Select the network range of the phone.");
             switch (_currentPhone.NetworkRange)
             {
                 case NetworkRange.TwoG: selectedRange = () => NetworkRange.TwoG; break;
@@ -356,9 +376,9 @@ namespace Phone
                 displayLabel.Text = "Phone updated:\n" + PhoneToString(_currentPhone);
             };
 
-            form.Controls.Add(saveButton);
+            containerPanel.Controls.Add(saveButton);
 
-            // Обработка закрытия формы
+            // Handle form closing
             form.FormClosing += (s, e) => HandleFormClosing(e, isSaved);
 
             form.ShowDialog();
